@@ -1,0 +1,22 @@
+pipeline {
+    agent any
+        tools { 
+            maven 'MAVEN_HOME' 
+            }
+    stages {
+        stage('Build Repository Checkout') {
+            steps{
+                // Clean the workspace
+                cleanWs()
+
+                // Check out the build repository
+                checkout([$class: 'GitSCM', branches: [[name: '*/development']], extensions: [], userRemoteConfigs: [[credentialsId: 'Github-NeenaPOC', url: 'https://github.com/NeenaVS/poc.git']]])
+            }
+        }
+        stage('Maven Build') {
+            steps{
+                sh 'mvn clean install'
+            }
+        }
+    }
+}
